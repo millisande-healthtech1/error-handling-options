@@ -19,4 +19,14 @@ export class AppController {
   wrapShow(): Promise<void> {
     return this.appService.wrappedShow('ID')
   } 
+
+  @Get('vErrorShow')
+  vErrorShow(): Promise<void> {
+    return this.appService.verrorShow('ID')
+  } 
+
+  @Get('tsErrorShow')
+  tsErrorShow(): Promise<void> {
+    return this.appService.tsErrorShow('ID')
+  } 
 }
