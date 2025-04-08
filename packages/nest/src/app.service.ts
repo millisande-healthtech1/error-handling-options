@@ -1,6 +1,7 @@
-import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { AppRepository, NoDataError, NoDataExtendableError } from './app.repository';
-import { VError } from "verror"
+import { logger } from '@millie/common';
+import { VError } from "verror";
 
 class WrappedNoDateExtendableError extends NoDataExtendableError {}
 
@@ -13,7 +14,6 @@ const wrapErrors = (thrown: Error | Error[], e: Error) => {
 
 @Injectable()
 export class AppService {
-  private readonly logger = new Logger(AppService.name);
   constructor(private readonly repository: AppRepository) {}
   
   getHello(): string {
@@ -26,7 +26,6 @@ export class AppService {
     try {    
       return await this.repository.getById(id);
     } catch (error) {
-      console.log(error, 'error')
       if (error instanceof NoDataError) {
         throw new HttpException("Message is that thing not found", HttpStatus.INTERNAL_SERVER_ERROR, {cause: error});
     }
@@ -51,12 +50,12 @@ async verrorShow(id: string) {
     return await this.repository.getByIdVerror(id);
   } catch (error) {
       const wrappedError = new VError(error, "Failed to run verrorShow")
-      this.logger.error("Layer 1 Bad error occurred: {error}", error)
+      logger.error("Layer 1 Bad error occurred: {error}", error)
       throw wrappedError;
   }
 } catch (error2) {
   const wrappedError = new VError(error2, "This is wrapped again")
-  this.logger.error("Layer 2 Bad error occurred: {error}", error2)
+  logger.error("Layer 2 Bad error occurred: {error}", error2)
   throw wrappedError;
 }
 }
@@ -67,10 +66,10 @@ async tsErrorShow(id: string) {
     } catch (error) {
       if (error instanceof NoDataExtendableError) {
         const wrappedError = new WrappedNoDateExtendableError(error.message);
-        this.logger.error("Layer 1 Bad error occurred: {error}")
+        logger.error("Layer 1 Bad error occurred: {error}", error)
         throw wrappedError
       }
-      this.logger.log("Fallen through");
+      logger.log("Fallen through");
       throw error
     }
 }

@@ -54,3 +54,7 @@ curl --request GET \
 curl --request GET \
   --url http://localhost:3000/tsErrorShow
 ```
+
+![tsError logs](/docs/tsError.png)
+
+This one doesn't fulfill our requirements and is equivalent to our existing solution with TemplatedError. We can only amend the name and the message, there's no way to include cause.
