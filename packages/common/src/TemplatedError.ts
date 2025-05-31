@@ -14,7 +14,9 @@ export class TemplatedError extends Error {
       // @ts-ignore
       this[key] = boundProperties[key];
     });
-    // @ts-ignore
-    Error.captureStackTrace(this, this.constructor);
+
+    // This is overwriting the full stack trace with just the information provided in the constructor, turned off for my purposes
+    // // @ts-ignore
+    // Error.captureStackTrace(this, this.constructor);
   }
 }
