@@ -29,6 +29,8 @@ export class AppService {
       if (error instanceof NoDataError) {
         throw new HttpException("Message is that thing not found", HttpStatus.INTERNAL_SERVER_ERROR, {cause: error});
     }
+    logger.info("Fallen through")
+    throw error;
   }
 }
 
@@ -50,13 +52,13 @@ async verrorShow(id: string) {
     return await this.repository.getByIdVerror(id);
   } catch (error) {
       const wrappedError = new VError(error, "Failed to run verrorShow")
-      logger.error("Layer 1 Bad error occurred: {error}", error)
+      logger.error("Layer 1 Bad error occurred: {error}", wrappedError)
       throw wrappedError;
   }
 } catch (error2) {
-  const wrappedError = new VError(error2, "This is wrapped again")
-  logger.error("Layer 2 Bad error occurred: {error}", error2)
-  throw wrappedError;
+  const wrappedError2 = new VError(error2, "This is wrapped again")
+  logger.error("Layer 2 Bad error occurred: {error}", wrappedError2)
+  throw wrappedError2;
 }
 }
 
@@ -73,6 +75,5 @@ async tsErrorShow(id: string) {
       throw error
     }
 }
-
 
 }

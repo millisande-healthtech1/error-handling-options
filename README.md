@@ -58,3 +58,12 @@ curl --request GET \
 ![tsError logs](/docs/tsError.png)
 
 This one doesn't fulfill our requirements and is equivalent to our existing solution with TemplatedError. We can only amend the name and the message, there's no way to include cause.
+
+
+# Thoughts
+
+Throw a http error deep in the code (some good points, generally disliked as an idea)
+
+We have a wrapper just on the controller function so that we always logger.error and map a templated error to the correct error code (and normally just default to 500), could use .catch rather than try catch as well
+
+Question: can we do this with middleware instead? Probably, go have a go
