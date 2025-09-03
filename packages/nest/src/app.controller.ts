@@ -29,4 +29,14 @@ export class AppController {
   tsErrorShow(): Promise<void> {
     return this.appService.tsErrorShow('ID')
   } 
+
+  @Get('causeError')
+  causeError(): Promise<void> {
+    return this.appService.causeOnError('ID')
+  }
+
+    @Get('noCauseError')
+  noCauseError(): Promise<void> {
+    return this.appService.errorNoCause('ID')
+  }
 }

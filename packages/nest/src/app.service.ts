@@ -2,6 +2,7 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { AppRepository, NoDataError, NoDataExtendableError } from './app.repository';
 import { logger } from '@millie/common';
 import { VError } from "verror";
+import { getErrorMessage } from './utils';
 
 class WrappedNoDateExtendableError extends NoDataExtendableError {}
 
@@ -74,6 +75,38 @@ async tsErrorShow(id: string) {
       logger.log("Fallen through");
       throw error
     }
+}
+
+async causeOnError(id: string) {
+  try {    
+    return await this.repository.getById(id);
+  } catch (error) {
+      const newError = new Error("Message is that thing not found", {cause: error});
+      logger.error('this is the error', newError)
+      logger.error(
+        "Error whilst using attempt number {i} for regId {regId} {error}",
+        6,
+        'regId',
+        getErrorMessage(newError),
+      );
+      throw new Error("call failed");
+  }
+}
+
+async errorNoCause(id: string) {
+  try {    
+    return await this.repository.getById(id);
+  } catch (error) {
+      const newError = new Error("Message is that thing not found");
+      logger.error('this is the error', newError)
+      logger.error(
+        "Error whilst using attempt number {i} for regId {regId} {error}",
+        6,
+        'regId',
+        getErrorMessage(newError),
+      );
+      throw new Error("call failed");
+  }
 }
 
 }
